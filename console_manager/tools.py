@@ -2,29 +2,44 @@ import os
 import shutil
 import random
 
-
 balance = 0
 his = []
 
+if os.path.exists('balance.txt'):
+    with open('balance.txt', 'r') as file:
+        balance = float(file.read())
 
-def put():
+
+def save_balance(balance):
+    with open('balance.txt', 'w') as file:
+        file.write(balance)
+
+
+def save_history(his):
+    with open('history.txt', 'a') as file:
+        file.write(his)
+
+
+def put(summ):
     global balance
-    summ = float(input('Введите сумму пополнения:\t'))
+    # summ = float(input('Введите сумму пополнения:\t'))
     balance += summ
     print(f'Ваш текущий баланс составляет {balance}')
-    # return balance + summ
+    return balance
 
 
-def buy():
+def buy(summ):
     global balance
     global his
-    summ = float(input('Введите сумму покупки:\t'))
+    # summ = float(input('Введите сумму покупки:\t'))
     if summ > balance:
         print('Недостаточно средств, оформите кредит или овердрафт')
     else:
         prod = input('Что будете приобретать?:\t')
         balance -= summ
         his.append((prod, summ))
+        print(f'Ваш текущий баланс составляет {balance}')
+        return balance
 
 
 def history():
@@ -82,10 +97,10 @@ def info():
 
 
 def creator():
-    print('*'*15)
+    print('*' * 15)
     print('Badi')
     print('https://github.com/DMBabich')
-    print('*'*15)
+    print('*' * 15)
 
 
 def victory():

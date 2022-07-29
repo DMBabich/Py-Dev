@@ -39,9 +39,11 @@ while 1:
             print('4. выход')
             choice = input('\nВыберите пункт меню:\t')
             if choice == '1':
-                tools.put()
+                summ = float(input('Введите сумму пополнения:\t'))
+                tools.put(summ)
             elif choice == '2':
-                tools.buy()
+                summ = float(input('Введите сумму пополнения:\t'))
+                tools.buy(summ)
             elif choice == '3':
                 tools.history()
             elif choice == '4':
