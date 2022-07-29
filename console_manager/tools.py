@@ -35,11 +35,13 @@ def history():
 
 def make_folder(name):
     os.mkdir(name)
+    return 'Folder was created!'
 
 
 def remove(name):
     item = os.getcwd() + '/' + name
     os.rmdir(item)
+    return 'Remove complete'
 
 
 def make_copy(name, path):
@@ -76,6 +78,7 @@ def info():
     inf = os.uname()
     print(inf)
     print(inf.sysname)
+    return 'info'
 
 
 def creator():
