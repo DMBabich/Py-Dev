@@ -8,14 +8,23 @@ while 1:
 
     if answer == '1':
         folder = input('Введите название папки:\n')
-        tools.make_folder(folder)
+        try:
+            tools.make_folder(folder)
+        except Exception:
+            print('Вы ввели неправильный путь/название. Повторите попытку')
     elif answer == '2':
         item = input('Введите название папки в текущей директории которую надо удалить:\n')
-        tools.remove(item)
+        try:
+            tools.remove(item)
+        except Exception:
+            print('Вы ввели неправильный путь/название либо такого пути/папки не существует. Повторите попытку')
     elif answer == '3':
         item = input('Введите название (папки|файла) или путь с названием который будем копировать:\n')
         path = input('Введите название (папки|файла) или путь с названием куда будем копировать:\n')
-        tools.make_copy(item, path)
+        try:
+            tools.make_copy(item, path)
+        except Exception:
+            print('Вы ввели неправильный путь/название. Повторите попытку')
     elif answer == '4':
         name = os.getcwd()
         tools.check_dir(name)
@@ -41,11 +50,25 @@ while 1:
             print('4. выход')
             choice = input('\nВыберите пункт меню:\t')
             if choice == '1':
-                summ = float(input('Введите сумму пополнения:\t'))
-                tools.put(summ)
+                try:
+                    summ = float(input('Введите сумму пополнения:\t'))
+                except Exception:
+                    print('Я не могу положить ЭТО на Ваш счет!')
+                else:
+                    if summ < 0:
+                        print('Ахалай Махалай! Из минуса делаем плюс')
+                        summ *= -1
+                    tools.put(summ)
             elif choice == '2':
-                summ = float(input('Введите сумму покупки:\t'))
-                tools.buy(summ)
+                try:
+                    summ = float(input('Введите сумму покупки:\t'))
+                except Exception:
+                    print('И как я должен ЭТО снять со счета!?')
+                else:
+                    if summ < 0:
+                        print('Ах, хитрость. Но я вычту все правильно!')
+                        summ *= -1
+                    tools.buy(summ)
             elif choice == '3':
                 answer = input('Посмотреть прошлые покупки? (yes|no):\t')
                 tools.show_history(answer)
@@ -61,7 +84,10 @@ while 1:
             print()
     elif answer == '11':
         folder = input('Введите путь, в который надо перейти:\n')
-        tools.set_dir(folder)
+        try:
+            tools.set_dir(folder)
+        except Exception:
+            print('Увы и ах. Но таков путь самурая...')
     elif answer == '12':
         print('Bye!')
         break
