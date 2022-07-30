@@ -19,6 +19,8 @@ while 1:
     elif answer == '4':
         name = os.getcwd()
         tools.check_dir(name)
+        answer = input('Хотите записать инфу о директории? (yes|no):\t')
+        tools.save_checker(answer, name)
     elif answer == '5':
         name = os.getcwd()
         tools.check_dir_only(name)
@@ -39,13 +41,20 @@ while 1:
             print('4. выход')
             choice = input('\nВыберите пункт меню:\t')
             if choice == '1':
-                tools.put()
+                summ = float(input('Введите сумму пополнения:\t'))
+                tools.put(summ)
             elif choice == '2':
-                tools.buy()
+                summ = float(input('Введите сумму покупки:\t'))
+                tools.buy(summ)
             elif choice == '3':
+                answer = input('Посмотреть прошлые покупки? (yes|no):\t')
+                tools.show_history(answer)
                 tools.history()
             elif choice == '4':
                 print('Bye! See you later :)')
+                tools.save_balance(tools.balance)
+                tools.save_history(tools.his)
+                tools.his = []
                 break
             else:
                 print('Неверный пункт меню')
