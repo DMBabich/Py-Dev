@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 import random
 
@@ -6,18 +7,23 @@ balance = 0
 his = []
 
 if os.path.exists('balance.txt'):
-    with open('balance.txt', 'r') as file:
+    with open('balance.txt', 'r', encoding='utf-8') as file:
         balance = float(file.read())
 
 
 def save_balance(balance):
-    with open('balance.txt', 'w') as file:
-        file.write(balance)
+    with open('balance.txt', 'w', encoding='utf-8') as file:
+        file.write(str(balance))
+    return 'balance was saved'
 
 
 def save_history(his):
-    with open('history.txt', 'a') as file:
-        file.write(his)
+    with open('history.txt', 'a', encoding='utf-8') as file:
+        for item in his:
+            # sale = f'{item[0]} на сумму {item[1]}\n'
+            sale = f'{item[0]},{item[1]},\n'
+            file.write(sale)
+    return 'history was saved'
 
 
 def put(summ):
@@ -34,6 +40,7 @@ def buy(summ):
     # summ = float(input('Введите сумму покупки:\t'))
     if summ > balance:
         print('Недостаточно средств, оформите кредит или овердрафт')
+        print(f'Ваш текущий баланс составляет {balance}')
     else:
         prod = input('Что будете приобретать?:\t')
         balance -= summ
@@ -48,13 +55,26 @@ def history():
         print(f'{item[0]} на сумму {item[1]}')
 
 
+def show_history(answer):
+    if answer == 'yes':
+        with open('history.txt', 'r', encoding='utf-8') as hist:
+            mass = hist.readlines()
+        for line in mass:
+            array = line.split(',')
+            print(f'{array[0]} на сумму {array[1]}')
+        return 'history was load'
+
+
 def make_folder(name):
     os.mkdir(name)
     return 'Folder was created!'
 
 
 def remove(name):
-    item = os.getcwd() + '/' + name
+    try:
+        item = os.getcwd() + '/' + name
+    except Exception:
+        item = os.getcwd() + '\\' + name
     os.rmdir(item)
     return 'Remove complete'
 
@@ -89,10 +109,24 @@ def check_files_only(name):
     print(only_files)
 
 
+def save_checker(answer, name):
+    if answer == 'yes':
+        only_dir = None
+        only_files = None
+        for dirs, folder, files in os.walk(name):
+            only_dir = folder
+            only_files = files
+            with open('listdir.txt', 'w') as filik:
+                filik.writelines(f'files: {only_files}\ndirs: {only_dir}')
+            break
+    return 'checker was saved'
+
+
 def info():
-    inf = os.uname()
+    # inf = os.uname()
+    inf = platform.uname()
     print(inf)
-    print(inf.sysname)
+    # print(inf.sysname)
     return 'info'
 
 
