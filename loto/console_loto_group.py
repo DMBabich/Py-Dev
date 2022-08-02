@@ -1,22 +1,49 @@
 import random
 import time
+import os
 from setup import Player
 from setup import Comp
 from setup import BagOfBalls
 from setup import initializer
 
+peoples = int(input('Введите кол-во играющих:\t'))
+play_with_computer = input('В игре будет участвовать компьютер? (yes|no):\t')
+if play_with_computer == 'yes':
+    count_comp = int(input('Сколько игроков из общего числа будут компьютерами?:\t'))
+    if peoples<count_comp:
+        print('Дичь какая-то')
+        os.system(exit())
+    count_people = peoples - count_comp
+else:
+    count_people = peoples
 
-player_name = input('Введите имя игрока:\t')
-player = Player(player_name)
-comp_name = random.choice(['Badi','Thor','Odin','Квазимодо','Шарлатан','Воландеморт'])
-print(f'Против вас играет {comp_name}')
-computer = Comp(comp_name)
-loto = BagOfBalls()
-versus = [player, computer]
+versus = {}
+p = 0
+k = 0
+while p!=count_people:
+    player_name = input('Введите имя игрока:\t')
+    if player_name in versus.keys():
+        print('Такой игрок уже существует')
+    else:
+        versus[player_name] = Player(player_name)
+        p += 1
+try:
+    while k!=count_comp:
+        comp_name = input('Введите имя компьютера:\t')
+        if comp_name in versus.keys():
+            print('Такой игрок уже существует')
+        else:
+            versus[comp_name] = Comp(comp_name)
+            k += 1
+except Exception:
+    print('Играем без компов')
+
 
 print('Ожидайте инициализации партии')
+loto = BagOfBalls()
 time.sleep(2)
-for current_person in versus:
+for k, v in versus.items():
+    current_person = v
     print(f'Инициализируется {current_person.name}')
     current_person.create_empty_card()
     current_person.fill_card()
@@ -32,7 +59,8 @@ while loto.depth_of_bag() != 0:
     game_status = 0
     ball = loto.output_ball()[0]
     print(f'Выпало число {ball}')
-    for person in versus:
+    for k, v in versus.items():
+        person = v
         if (len(versus) - len(perfomance) == 1) and person.status == 'PLAY':
             print(f'Победа за {person.name}')
             game_status = 1
