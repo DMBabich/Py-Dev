@@ -11,6 +11,9 @@ class Ticket:
         self.numbers = [i for i in range(1, 91)]
         self.numbers_in_ticket = random.sample(population=self.numbers, k=15)
 
+    def __str__(self):
+        return f'Объект - игровой билет'
+
     def create_empty_card(self):
         for i in range(3):
             for j in range(9):
@@ -73,6 +76,9 @@ class BagOfBalls:
         self.balls = [i for i in range(1, 91)]
         self.current_ball = None
 
+    def __str__(self):
+        return f'Объект - мешок с бочонками'
+
     def output_ball(self):
         self.current_ball = random.sample(population=self.balls,
                                           k=1)
@@ -84,11 +90,13 @@ class BagOfBalls:
 
 
 class Player(Ticket):
-    pass
+    def __str__(self):
+        return f'Игровая карточка игрока {self.name}'
 
 
 class Comp(Ticket):
-    pass
+    def __str__(self):
+        return f'Игровая карточка компьютера модели {self.name}'
 
 
 def initializer():
@@ -97,5 +105,4 @@ def initializer():
         print(f'Запуск через {i}')
         time.sleep(1)
     print('\n' * 30)
-
 
