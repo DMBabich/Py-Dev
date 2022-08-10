@@ -1,11 +1,12 @@
 from pprint import pprint
-from pickle import dump, load
 import re
 from collections import Counter
 
 from requests import get
 from pycbrf import ExchangeRates
 
+from orm import Session
+from orm import Area
 
 def parcer(query, where='all'):
     """
@@ -34,24 +35,22 @@ def parcer(query, where='all'):
     result['count'] += all_count
     # перебор каждой вакансии
     for res in ress['items']:
-        # pprint(res)
         skills = set()
         city_vac = res['area']['name']
-        if city_vac not in area:
-            area[city_vac] = res['area']['id']
+        db = Session()
+        rest = db.query(Area).filter_by(name=city_vac).one_or_none()
+        if not rest:
+            db.add(Area(name=city_vac, ind=res['area']['id']))
+            db.commit()
+        db.close()
         ar = res['area']
         res_full = get(res['url']).json()
-        # pprint(res_full)
         pp = res_full['description']
-        # print(pp)
         pp_re = re.findall(r'\s[A-Za-z-?]+', pp)
-        # print(pp_re)
         its = set(x.strip(' -').lower() for x in pp_re)
-        # print(its)
         for sk in res_full['key_skills']:
             skillis.append(sk['name'].lower())
             skills.add(sk['name'].lower())
-        # skills |= sk1
         for it in its:
             if not any(it in x for x in skills):
                 skillis.append(it)
@@ -64,7 +63,6 @@ def parcer(query, where='all'):
             sal['to'].append(k * res_full['salary']['to'] if res['salary']['to'] else k*res_full['salary']['from'])
     # создание словаря-счетчика для навыков
     sk2 = Counter(skillis)
-    # pprint(sk2)
     up = sum(sal['from']) / len(sal['from'])
     down = sum(sal['to']) / len(sal['to'])
     # формирование результирующего словаря
@@ -76,8 +74,6 @@ def parcer(query, where='all'):
                     'count': count,
                     'percent': round((count / result['count'])*100, 2)})
     result['requirements'] = add
-    with open('area.pkl', mode='wb') as f:
-        dump(area, f)
     return result
 
 
