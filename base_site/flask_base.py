@@ -3,6 +3,7 @@ from flask import request
 from flask import render_template
 
 from hh import parcer
+from tools import add_row
 
 
 app = Flask(__name__)
@@ -25,6 +26,9 @@ def result():
     data = parcer(**phrase)
     check = {**data, **phrase}
     print(check)
+    check['where'] = 'в названии вакансии' \
+        if check['where'] == 'name' else 'в названии компании' if check['where'] == 'company' else 'везде'
+    add_row(check)
     return render_template('about.html', result=check)
 
 
